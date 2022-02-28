@@ -17,9 +17,10 @@ typedef struct
 
 int menu();
 void form();
-void printonAll();
+void printAllStudents();
 void addtostr();
-void searchinstr();
+void searchStudentBySurname();
+void printStudentWithNameStartWithA();
 
 int main()
 {
@@ -34,17 +35,17 @@ int main()
 			form();
 			break;
 		case 2:
-			printonAll();
+			printAllStudents();
 			break;
 		case 3:
 			addtostr();
 			break;
 		case 4:
-			searchinstr();
+			searchStudentBySurname();
 			break;
 		case 5:
-			printf("Студенты с Фамилий начинающаяся на А");
-			printNameStartWithA();
+			printf("Студенты с Фамилий начинающаяся на А\n");
+			printStudentWithNameStartWithA();
 			break;
 		case 6:
 			return 0;
@@ -76,9 +77,9 @@ void enterStudent(student_t* student)
 	scanf_s("%s", student->surname,sizeof(student->surname));
 	printf("Введите инициалы:\n");
 	scanf_s("%s", student->initials,sizeof(student->initials));
-	printf("Введите день рождения:\n");
+	printf("Введите день рождения (в формате 	DD.MM.YYYY) :\n");
 	scanf_s("%s", student->birthday,sizeof(student->birthday));
-	printf("Введите дату поступлени:\n");
+	printf("Введите дату поступлени (в формате 	DD.MM.YYYY) :\n");
 	scanf_s("%s", student->receipt_date,sizeof(student->receipt_date));
 	printf("Введите оценку по математике:\n");
 	scanf_s("%f", &student->math_score,sizeof(student->math_score));
@@ -94,8 +95,8 @@ void printStudent(student_t* student, int *flag)
 	{
 	printf("Фамилия : %s\n", student->surname);
 	printf("Инициалы : %s\n", student->initials);
-	printf("День рождения (в формате 	DD.MM.YYYY)     : %s\n", student->birthday);
-	printf("Дата поступления (в формате 	DD.MM.YYYY)    : %s\n", student->receipt_date);
+	printf("День рождения : %s\n", student->birthday);
+	printf("Дата поступления : %s\n", student->receipt_date);
 	printf("Оценка по математике : %.2f\n", student->math_score);
 	printf("Оценка по физике : %.2f\n", student->physics_grade);
 	printf("Оценка по физике : %.2f\n", student->computer_science_assessment);
@@ -105,7 +106,7 @@ void printStudent(student_t* student, int *flag)
 	{
 		printf("Фамилия : %s\n", student->surname);
 		printf("Инициалы : %s\n", student->initials);
-		printf("День рождения (в формате 	DD.MM.YYYY)     : %s\n", student->birthday);
+		printf("День рождения : %s\n", student->birthday);
 	}
 }
 
@@ -193,8 +194,7 @@ bool readStudents(student_t** students, int *sch)
 	return true;
 }
 
-void printonAll()
-
+void printAllStudents()
 {
 	student_t* students = NULL;
 	int sch, flag = 1;
@@ -208,10 +208,10 @@ void printonAll()
 	free(students);
 }
 
-void searchinstr()
+void searchStudentBySurname()
 {
 	student_t* students = NULL;
-	int sch, flag = 1;
+	int sch, flag = 2;
 	if (!readStudents(&students, &sch))
 		return;
 	if (sch == 0)
@@ -241,12 +241,12 @@ void searchinstr()
 		}
 	free(students);
 }
-void printNameStartWithA()
 
+void printStudentWithNameStartWithA()
 {
 	student_t* students = NULL;
 	int sch, flag = 2;
-	char str2[2] = "A";
+	char str2[2] = "А";
 	char *istr[100];
 	if (!readStudents(&students, &sch))
 		return;
@@ -256,6 +256,10 @@ void printNameStartWithA()
 		*istr = strstr(students[i].surname, str2);
 		if (*istr - students[i].surname + 1 == 1)
 		printStudent(&students[i], &flag);
+		char str2[2] = "A";
+		*istr = strstr(students[i].surname, str2);
+		if (*istr - students[i].surname + 1 == 1)
+			printStudent(&students[i], &flag);
 	}
 	free(students);
 }
