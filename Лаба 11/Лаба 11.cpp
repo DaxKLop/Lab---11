@@ -3,14 +3,15 @@
 #include <locale.h>
 #include <string.h>
 
-typedef struct
+typedef struct 
 {
 	char surname[30];
-	char name[30];
-	char fathername[30];
-	char address[30];
-	int group;
-	float rating;
+	char initials[30];
+	char birthday[30];
+	char receipt_date[30];
+	float math_score;
+	float physics_grade;
+	float computer_science_assessment;
 } student_t;
 
 int menu();
@@ -44,7 +45,7 @@ int main()
 			printf("\nНеверный выбор\n");
 		}
 	}
-	return 0;
+return 0;
 }
 
 int menu()
@@ -64,27 +65,30 @@ int menu()
 void enterStudent(student_t* student)
 {
 	printf("Введите фамилию:\n");
-	scanf_s("%s", student->surname, sizeof(student->surname));
-	printf("Введите имя:\n");
-	scanf_s("%s", student->name, sizeof(student->name));
-	printf("Введите отчество:\n");
-	scanf_s("%s", student->fathername, sizeof(student->fathername));
-	printf("Введите адрес:\n");
-	scanf_s("%s", student->address, sizeof(student->address));
-	printf("Введите № группы:\n");
-	scanf_s("%d", &student->group, sizeof(student->group));
-	printf("Введите рейтинг:\n");
-	scanf_s("%f", &student->rating, sizeof(student->rating));
+	scanf_s("%s", student->surname,sizeof(student->surname));
+	printf("Введите инициалы:\n");
+	scanf_s("%s", student->initials,sizeof(student->initials));
+	printf("Введите день рождения:\n");
+	scanf_s("%s", student->birthday,sizeof(student->birthday));
+	printf("Введите дату поступлени:\n");
+	scanf_s("%s", student->receipt_date,sizeof(student->receipt_date));
+	printf("Введите оценку по математике:\n");
+	scanf_s("%f", &student->math_score,sizeof(student->math_score));
+	printf("Введите оценку по физике:\n");
+	scanf_s("%f", &student->physics_grade,sizeof(student->physics_grade));
+	printf("Введите оценку по информатике:\n");
+	scanf_s("%f", &student->computer_science_assessment, sizeof(student->computer_science_assessment));
 }
 
 void printStudent(student_t* student)
 {
 	printf("Фамилия : %s\n", student->surname);
-	printf("Имя : %s\n", student->name);
-	printf("Отчество : %s\n", student->fathername);
-	printf("Адрес : %s\n", student->address);
-	printf("Группа : %d\n", student->group);
-	printf("Рейтинг : %.2f\n", student->rating);
+	printf("Инициалы : %s\n", student->initials);
+	printf("День рождения : %s\n", student->birthday);
+	printf("Дата поступления : %s\n", student->receipt_date);
+	printf("Оценка по математике : %.2f\n", student->math_score);
+	printf("Оценка по физике : %.2f\n", student->physics_grade);
+	printf("Оценка по информатике : %.2f\n", student->computer_science_assessment);
 	printf("____________\n");
 }
 
@@ -98,7 +102,7 @@ void form()
 		printf("Ошибка открытия файла\n");
 		return;
 	}
-
+	
 	printf("Введите размерность списка структур:\n");
 
 	int sch;
@@ -108,7 +112,7 @@ void form()
 
 	for (int i = 0; i < sch; i++)
 	{
-		enterStudent(&students[i]);
+		enterStudent(&students[i]);	
 	}
 	fwrite(students, sizeof(student_t), sch, f);
 	fclose(f);
@@ -126,12 +130,12 @@ void addtostr()
 		printf("Ошибка открытия файла\n");
 		return;
 	}
-
+	
 	int k;
 	printf("Введите количество добавлений:\n");
 	scanf_s("%d", &k);
 	printf("\n");
-	student_t* students = (student_t*)calloc(k, sizeof(student_t));
+	student_t* students = (student_t*)calloc( k, sizeof(student_t));
 
 
 	for (int i = 0; i < k; i++)
@@ -143,7 +147,7 @@ void addtostr()
 	free(students);
 }
 
-bool readStudents(student_t** students, int* sch)
+bool readStudents(student_t** students, int *sch)
 {
 	FILE* f = NULL;
 	fopen_s(&f, "student.txt", "rb");
@@ -153,7 +157,7 @@ bool readStudents(student_t** students, int* sch)
 		printf("Ошибка открытия файла 1\n");
 		return false;
 	}
-	fseek(f, 0, SEEK_END);
+	fseek(f, 0, SEEK_END); 
 	*sch = ftell(f) / sizeof(student_t);
 	fseek(f, 0, SEEK_SET);
 	*students = (student_t*)calloc(*sch, sizeof(student_t));
@@ -176,9 +180,9 @@ void printon()
 {
 	student_t* students = NULL;
 	int sch;
-	if (!readStudents(&students, &sch))
+	if (!readStudents(&students, &sch)) 
 		return;
-
+		
 	for (int i = 0; i < sch; i++)
 	{
 		printStudent(&students[i]);
@@ -193,7 +197,7 @@ void searchinstr()
 	if (!readStudents(&students, &sch))
 		return;
 	if (sch == 0)
-	{
+	{ 
 		printf("\nНет записей: \n");
 		free(students);
 		return;
@@ -202,7 +206,7 @@ void searchinstr()
 	char se[30];
 
 	printf("\nВведите фамилию для поиска\n");
-	scanf_s("%s", se, sizeof(se));
+	scanf_s("%s", se,sizeof(se));
 
 	bool isFound = false;
 	for (int i = 0; i < sch; i++)
@@ -214,8 +218,8 @@ void searchinstr()
 		}
 	}
 	if (!isFound)
-	{
-		printf("Не найдено\n");
-	}
+		{
+			printf("Не найдено\n");
+		}
 	free(students);
 }
