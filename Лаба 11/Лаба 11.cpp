@@ -17,7 +17,7 @@ typedef struct
 
 int menu();
 void form();
-void printon();
+void printonAll();
 void addtostr();
 void searchinstr();
 
@@ -34,7 +34,7 @@ int main()
 			form();
 			break;
 		case 2:
-			printon();
+			printonAll();
 			break;
 		case 3:
 			addtostr();
@@ -43,6 +43,10 @@ int main()
 			searchinstr();
 			break;
 		case 5:
+			printf("Студенты с Фамилий начинающаяся на А");
+			printNameStartWithA();
+			break;
+		case 6:
 			return 0;
 		default:
 			printf("\nНеверный выбор\n");
@@ -58,7 +62,8 @@ int menu()
 	printf("2)Печать\n");
 	printf("3)Добавление\n");
 	printf("4)Поиск\n");
-	printf("5)Выход\n");
+	printf("5)Задание\n");
+	printf("6)Выход\n");
 	printf("\nВаш выбор:\n");
 	scanf_s("%d", &k);
 	return k;
@@ -83,16 +88,25 @@ void enterStudent(student_t* student)
 	scanf_s("%f", &student->computer_science_assessment,sizeof(student->computer_science_assessment));
 }
 
-void printStudent(student_t* student)
+void printStudent(student_t* student, int *flag)
 {
+	if (*flag == 1)
+	{
 	printf("Фамилия : %s\n", student->surname);
 	printf("Инициалы : %s\n", student->initials);
-	printf("День рождения : %s\n", student->birthday);
-	printf("Дата поступления : %s\n", student->receipt_date);
+	printf("День рождения (в формате 	DD.MM.YYYY)     : %s\n", student->birthday);
+	printf("Дата поступления (в формате 	DD.MM.YYYY)    : %s\n", student->receipt_date);
 	printf("Оценка по математике : %.2f\n", student->math_score);
 	printf("Оценка по физике : %.2f\n", student->physics_grade);
 	printf("Оценка по физике : %.2f\n", student->computer_science_assessment);
 	printf("____________\n");
+	}
+	else if (*flag == 2)
+	{
+		printf("Фамилия : %s\n", student->surname);
+		printf("Инициалы : %s\n", student->initials);
+		printf("День рождения (в формате 	DD.MM.YYYY)     : %s\n", student->birthday);
+	}
 }
 
 void form()
@@ -164,6 +178,7 @@ bool readStudents(student_t** students, int *sch)
 	*sch = ftell(f) / sizeof(student_t);
 	fseek(f, 0, SEEK_SET);
 	*students = (student_t*)calloc(*sch, sizeof(student_t));
+	
 
 	if (fread(*students, sizeof(student_t), *sch, f) != *sch)
 	{
@@ -178,17 +193,17 @@ bool readStudents(student_t** students, int *sch)
 	return true;
 }
 
-void printon()
+void printonAll()
 
 {
 	student_t* students = NULL;
-	int sch;
+	int sch, flag = 1;
 	if (!readStudents(&students, &sch)) 
 		return;
 		
 	for (int i = 0; i < sch; i++)
 	{
-		printStudent(&students[i]);
+		printStudent(&students[i], &flag);
 	}
 	free(students);
 }
@@ -196,7 +211,7 @@ void printon()
 void searchinstr()
 {
 	student_t* students = NULL;
-	int sch;
+	int sch, flag = 1;
 	if (!readStudents(&students, &sch))
 		return;
 	if (sch == 0)
@@ -216,7 +231,7 @@ void searchinstr()
 	{
 		if (strcmp(students[i].surname, se) == 0)
 		{
-			printStudent(&students[i]);
+			printStudent(&students[i], &flag);
 			isFound = true;
 		}
 	}
@@ -224,5 +239,23 @@ void searchinstr()
 		{
 			printf("Не найдено\n");
 		}
+	free(students);
+}
+void printNameStartWithA()
+
+{
+	student_t* students = NULL;
+	int sch, flag = 2;
+	char str2[2] = "A";
+	char *istr[100];
+	if (!readStudents(&students, &sch))
+		return;
+
+	for (int i = 0; i < sch; i++)
+	{
+		*istr = strstr(students[i].surname, str2);
+		if (*istr - students[i].surname + 1 == 1)
+		printStudent(&students[i], &flag);
+	}
 	free(students);
 }
