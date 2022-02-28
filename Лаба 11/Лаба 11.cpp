@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
+#include <Windows.h>
 
 typedef struct 
 {
@@ -22,7 +23,9 @@ void searchinstr();
 
 int main()
 {
-	setlocale(LC_ALL, "russian");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "rus");
 	while (1)
 	{
 		switch (menu())
@@ -77,7 +80,7 @@ void enterStudent(student_t* student)
 	printf("Введите оценку по физике:\n");
 	scanf_s("%f", &student->physics_grade,sizeof(student->physics_grade));
 	printf("Введите оценку по информатике:\n");
-	scanf_s("%f", &student->computer_science_assessment, sizeof(student->computer_science_assessment));
+	scanf_s("%f", &student->computer_science_assessment,sizeof(student->computer_science_assessment));
 }
 
 void printStudent(student_t* student)
@@ -88,14 +91,14 @@ void printStudent(student_t* student)
 	printf("Дата поступления : %s\n", student->receipt_date);
 	printf("Оценка по математике : %.2f\n", student->math_score);
 	printf("Оценка по физике : %.2f\n", student->physics_grade);
-	printf("Оценка по информатике : %.2f\n", student->computer_science_assessment);
+	printf("Оценка по физике : %.2f\n", student->computer_science_assessment);
 	printf("____________\n");
 }
 
 void form()
 {
 	FILE* f = NULL;
-	fopen_s(&f, "student.txt", "wb");
+	fopen_s(&f, "student.dat", "w");
 
 	if (f == NULL)
 	{
@@ -123,7 +126,7 @@ void addtostr()
 {
 	FILE* f = NULL;
 
-	fopen_s(&f, "student.txt", "ab");
+	fopen_s(&f, "student.dat", "a");
 
 	if (f == NULL)
 	{
@@ -150,7 +153,7 @@ void addtostr()
 bool readStudents(student_t** students, int *sch)
 {
 	FILE* f = NULL;
-	fopen_s(&f, "student.txt", "rb");
+	fopen_s(&f, "student.dat", "r");
 
 	if (f == NULL)
 	{
